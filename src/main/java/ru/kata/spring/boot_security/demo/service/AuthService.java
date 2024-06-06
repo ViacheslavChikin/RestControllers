@@ -17,13 +17,18 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-@Transactional
+
 public class AuthService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -39,6 +44,7 @@ public class AuthService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public void createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (user.getRoles().size() == 0) {
@@ -47,6 +53,7 @@ public class AuthService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUser(Integer id) {
         if (userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
@@ -56,6 +63,7 @@ public class AuthService implements UserDetailsService {
     }
 
 
+    @Transactional
     public void update(User updatedUser, Integer id) {
         userRepository.findById(id).ifPresentOrElse(
                 user -> {

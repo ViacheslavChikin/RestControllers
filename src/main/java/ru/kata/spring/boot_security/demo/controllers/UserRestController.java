@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,8 +13,12 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 @RequestMapping("/apiUser")
 public class UserRestController {
 
-    @Autowired
-    private UserService service;
+
+    private final UserService service;
+
+    public UserRestController(UserService service) {
+        this.service = service;
+    }
 
     @GetMapping("/getCurrentUser")
     public ResponseEntity<User> getCurrentUser() {

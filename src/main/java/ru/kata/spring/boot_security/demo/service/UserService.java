@@ -16,8 +16,12 @@ import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
 
     @Override
@@ -29,6 +33,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    @Transactional(readOnly = true)
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {

@@ -10,12 +10,16 @@ import ru.kata.spring.boot_security.demo.service.AuthService;
 import java.util.List;
 
 
-@org.springframework.web.bind.annotation.RestController
+@RestController
 @RequestMapping("/apiAuth")
 public class AuthRestController {
 
-    @Autowired
-    private AuthService service;
+
+    private final AuthService service;
+
+    public AuthRestController(AuthService service) {
+        this.service = service;
+    }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> showAllUsers() {
@@ -24,9 +28,9 @@ public class AuthRestController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<String> postNewUser(@RequestBody User user) {
+    public ResponseEntity<User> postNewUser(@RequestBody User user) {
         service.createUser(user);
-        return ResponseEntity.ok("Done successfully with ID = " + user.getId());
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("/users")
